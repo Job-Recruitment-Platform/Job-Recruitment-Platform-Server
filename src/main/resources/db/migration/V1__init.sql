@@ -61,23 +61,7 @@ CREATE TABLE roles (
                        name VARCHAR(100) NOT NULL UNIQUE
 );
 
-CREATE TABLE permissions (
-                             id BIGSERIAL PRIMARY KEY,
-                             permission VARCHAR(100) NOT NULL UNIQUE
-);
-
-CREATE TABLE role_permission (
-                                 role_id BIGINT NOT NULL,
-                                 permission_id BIGINT NOT NULL,
-                                 PRIMARY KEY (role_id, permission_id),
-                                 CONSTRAINT fk_role_permission_role FOREIGN KEY (role_id)
-                                     REFERENCES roles(id) ON DELETE CASCADE,
-                                 CONSTRAINT fk_role_permission_permission FOREIGN KEY (permission_id)
-                                     REFERENCES permissions(id) ON DELETE CASCADE
-);
-
-CREATE INDEX idx_role_permission_role ON role_permission(role_id);
-CREATE INDEX idx_role_permission_permission ON role_permission(permission_id);
+-- permissions removed
 
 CREATE TABLE accounts (
                           id BIGSERIAL PRIMARY KEY,

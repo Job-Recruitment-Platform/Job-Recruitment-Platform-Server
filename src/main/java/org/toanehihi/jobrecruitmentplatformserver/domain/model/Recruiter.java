@@ -31,8 +31,8 @@ public class Recruiter {
 	@Column(name = "avatar_resource_id", nullable = false)
 	private Long avatarResourceId;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "company_id", nullable = false)
+	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "company_id")
 	private Company company;
 
 	@CreationTimestamp

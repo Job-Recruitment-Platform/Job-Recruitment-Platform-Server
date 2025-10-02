@@ -43,6 +43,9 @@ public class Company {
 	@Column(name = "date_created")
 	private OffsetDateTime dateCreated;
 
+	@OneToOne(mappedBy = "company", fetch = FetchType.LAZY)
+	private Recruiter recruiter;
+
     @OneToMany(mappedBy = "company")
     @Builder.Default
     private Set<CompanyLocation> companyLocations = new HashSet<>();
