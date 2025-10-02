@@ -40,6 +40,9 @@ public class Job {
 	@Column(name = "seniority")
 	private SeniorityLevel seniority;
 
+	@Column(name = "min_experience_years")
+	private Integer minExperienceYears;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "location_id")
 	private Location location;
@@ -57,8 +60,8 @@ public class Job {
 	@Column(name = "currency")
 	private String currency;
 
-	@Column(name = "description", columnDefinition = "text")
-	private String description;
+	@OneToOne(mappedBy = "job", fetch = FetchType.LAZY)
+	private JobDescription description;
 
 	@Column(name = "date_posted")
 	private OffsetDateTime datePosted;

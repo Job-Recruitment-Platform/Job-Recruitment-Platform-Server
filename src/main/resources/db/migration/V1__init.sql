@@ -252,12 +252,12 @@ CREATE TABLE jobs (
                       title VARCHAR(200) NOT NULL,
                       job_role_id BIGINT,
                       seniority seniority_level,
+                      min_experience_years INTEGER,
                       location_id BIGINT,
                       work_mode work_mode NOT NULL,
                       salary_min INTEGER,
                       salary_max INTEGER,
                       currency VARCHAR(10),
-                      description TEXT,
                       date_posted TIMESTAMPTZ(3),
                       date_expires TIMESTAMPTZ(3),
                       status job_status NOT NULL,
@@ -277,6 +277,25 @@ CREATE INDEX idx_jobs_seniority ON jobs(seniority);
 CREATE INDEX idx_jobs_work_mode ON jobs(work_mode);
 CREATE INDEX idx_jobs_date_posted ON jobs(date_posted DESC);
 CREATE INDEX idx_jobs_date_expires ON jobs(date_expires);
+
+-- Job Descriptions
+CREATE TABLE job_description (
+                                 id BIGSERIAL PRIMARY KEY,
+                                 job_id BIGINT NOT NULL,
+                                 summary TEXT,
+                                 responsibilities TEXT,
+                                 requirements TEXT,
+                                 nice_to_have TEXT,
+                                 benefits TEXT,
+                                 tech_stack TEXT,
+                                 hiring_process TEXT,
+                                 notes TEXT,
+                                 CONSTRAINT fk_job_description_job FOREIGN KEY (job_id)
+                                     REFERENCES jobs(id) ON DELETE CASCADE,
+                                 CONSTRAINT uq_job_description_job UNIQUE (job_id)
+);
+
+CREATE INDEX idx_job_description_job ON job_description(job_id);
 
 CREATE TABLE job_skill_requirements (
                                         job_id BIGINT NOT NULL,
