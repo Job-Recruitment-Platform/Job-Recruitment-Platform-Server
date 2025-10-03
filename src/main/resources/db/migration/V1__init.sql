@@ -162,10 +162,10 @@ CREATE INDEX idx_candidates_seniority ON candidates(seniority);
 
 CREATE TABLE recruiters (
                             id BIGSERIAL PRIMARY KEY,
-                            account_id BIGINT UNIQUE,
+                            account_id BIGINT NOT NULL UNIQUE,
                             full_name VARCHAR(150),
                             avatar_resource_id BIGINT NOT NULL,
-                            company_id BIGINT NOT NULL,
+                            company_id BIGINT NOT NULL UNIQUE,
                             date_created TIMESTAMPTZ(3) NOT NULL DEFAULT NOW(),
                             date_updated TIMESTAMPTZ(3) NOT NULL DEFAULT NOW(),
                             CONSTRAINT fk_recruiters_account FOREIGN KEY (account_id)
