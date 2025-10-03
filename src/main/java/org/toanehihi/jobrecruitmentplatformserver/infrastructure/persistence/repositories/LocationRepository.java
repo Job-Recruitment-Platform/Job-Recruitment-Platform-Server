@@ -8,7 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
-	Optional<Location> findByUniqueKey(String uniqueKey);
 }
 
 

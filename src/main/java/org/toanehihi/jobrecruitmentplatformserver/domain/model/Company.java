@@ -1,5 +1,6 @@
 package org.toanehihi.jobrecruitmentplatformserver.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,7 +44,8 @@ public class Company {
 	@Column(name = "date_created")
 	private OffsetDateTime dateCreated;
 
-	@OneToOne(mappedBy = "company", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "company")
+    @JsonIgnore
 	private Recruiter recruiter;
 
     @OneToMany(mappedBy = "company")
