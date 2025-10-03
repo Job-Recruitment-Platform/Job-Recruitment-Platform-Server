@@ -87,16 +87,18 @@ CREATE INDEX idx_accounts_status ON accounts(status);
 
 CREATE TABLE locations (
                            id BIGSERIAL PRIMARY KEY,
-                           city VARCHAR(120),
+                           street_address VARCHAR(255),
+                           ward VARCHAR(120),
+                           district VARCHAR(120),
+                           province_city VARCHAR(120),
                            country VARCHAR(120),
                            lat DECIMAL(10, 7),
-                           lng DECIMAL(10, 7),
-                           unique_key VARCHAR(240) UNIQUE -- city+country normalized
+                           lng DECIMAL(10, 7)
 );
 
-CREATE INDEX idx_locations_city ON locations(city);
+CREATE INDEX idx_locations_province_city ON locations(province_city);
+CREATE INDEX idx_locations_district ON locations(district);
 CREATE INDEX idx_locations_country ON locations(country);
-CREATE INDEX idx_locations_unique_key ON locations(unique_key);
 
 -- =====================================================
 -- COMPANY TABLES
