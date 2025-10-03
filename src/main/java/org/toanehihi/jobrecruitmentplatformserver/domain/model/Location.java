@@ -19,20 +19,24 @@ public class Location {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "city")
-	private String city;
+    @Column(name = "street_address")
+    private String streetAddress;    // số nhà, tên đường
 
-	@Column(name = "country")
-	private String country;
+    private String ward;             // phường/xã
+
+    private String district;         // quận/huyện/thị xã
+
+    @Column(name = "province_city")
+    private String provinceCity;     // tỉnh hoặc thành phố trực thuộc TW
+
+    private String country;          // quốc gia
 
 	@Column(name = "lat")
-	private java.math.BigDecimal lat;
+	private BigDecimal lat;
 
 	@Column(name = "lng")
 	private BigDecimal lng;
 
-	@Column(name = "unique_key", length = 240, unique = true)
-	private String uniqueKey;
 }
 
 
