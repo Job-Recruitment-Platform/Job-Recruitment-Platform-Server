@@ -3,7 +3,9 @@ import pkg from 'pg';
 import { faker } from '@faker-js/faker/locale/vi';
 
 const { Pool } = pkg;
-const pool = new Pool();
+
+// Cho phép dùng DATABASE_URL hoặc các biến PGHOST/PGUSER/PGPASSWORD...
+const pool = new Pool(process.env.DATABASE_URL ? { connectionString: process.env.DATABASE_URL } : {});
 
 /* ---------- helpers ---------- */
 const cap = (s) => (s && s.length ? s.charAt(0).toUpperCase() + s.slice(1) : s);
@@ -11,6 +13,14 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const recent = (days) => faker.date.recent({ days });
 const soon = (days, refDate) => faker.date.soon({ days, refDate });
+const shuffle = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+};
 
 /* ---------- enums ---------- */
 const ENUM = {
@@ -30,7 +40,7 @@ const N = {
     locations: 60,
     companies: 20,
     candidates: 50,
-    recruiters: 15,
+    recruiters: 15, // sẽ tự co lại nếu > companies
     jobFamilies: 6,
     subFamilies: 12,
     jobRoles: 30,
@@ -46,28 +56,34 @@ const VN_PROVINCES = [
     'Hồ Chí Minh','Hà Nội','Đà Nẵng','Bình Dương','Đồng Nai',
     'Khánh Hòa','Cần Thơ','Hải Phòng','Thừa Thiên Huế','Quảng Ninh','Bắc Ninh'
 ];
-const randomWard = () => (Math.random() < 0.5 ? `Phường ${cap(faker.word.sample())}` : `Xã ${cap(faker.word.sample())}`);
-const randomDistrict = () => (Math.random() < 0.6 ? `Quận ${randInt(1, 12)}` : `Huyện ${cap(faker.word.sample())}`);
-const randomStreetAddress = () => `${randInt(1, 299)} ${faker.location.street() || 'Đường ' + cap(faker.word.sample())}`;
+const randomWard = () =>
+    (Math.random() < 0.5 ? `Phường ${cap(faker.word.sample())}` : `Xã ${cap(faker.word.sample())}`);
+const randomDistrict = () =>
+    (Math.random() < 0.6 ? `Quận ${randInt(1, 12)}` : `Huyện ${cap(faker.word.sample())}`);
+const randomStreetAddress = () => {
+    const streetName = faker.location.street(); // tên đường
+    return `${randInt(1, 299)} ${streetName || 'Đường ' + cap(faker.word.sample())}`;
+};
 
-/* ---------- main ---------- */
 async function main() {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
 
-        // ---- roles
-        const roleNames = ['ADMIN','RECRUITER','CANDIDATE'].slice(0, N.roles);
+        /* ---- roles ---- */
+        const roleNames = ['ADMIN', 'RECRUITER', 'CANDIDATE'].slice(0, N.roles);
         const roleIds = [];
         for (const name of roleNames) {
             const { rows } = await client.query(
-                'INSERT INTO roles(name) VALUES ($1) ON CONFLICT (name) DO UPDATE SET name=EXCLUDED.name RETURNING id',
+                `INSERT INTO roles(name) VALUES ($1)
+         ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
+         RETURNING id`,
                 [name]
             );
             roleIds.push(rows[0].id);
         }
 
-        // ---- accounts
+        /* ---- accounts ---- */
         const accountIds = [];
         const emails = new Set();
         for (let i = 0; i < N.accounts; i++) {
@@ -89,7 +105,7 @@ async function main() {
             if (rows[0]) accountIds.push(rows[0].id);
         }
 
-        // ---- locations
+        /* ---- locations ---- */
         const locationIds = [];
         for (let i = 0; i < N.locations; i++) {
             const province = pick(VN_PROVINCES);
@@ -102,18 +118,20 @@ async function main() {
 
             const { rows } = await client.query(
                 `INSERT INTO locations(street_address, ward, district, province_city, country, lat, lng)
-         VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id`,
+         VALUES ($1,$2,$3,$4,$5,$6,$7)
+         RETURNING id`,
                 [street, ward, district, province, country, lat, lng]
             );
             locationIds.push(rows[0].id);
         }
 
-        // ---- companies
+        /* ---- companies ---- */
         const companyIds = [];
         for (let i = 0; i < N.companies; i++) {
             const { rows } = await client.query(
                 `INSERT INTO companies(name, website, size, logo_resource_id, verified)
-         VALUES ($1,$2,$3,$4,$5) RETURNING id`,
+         VALUES ($1,$2,$3,$4,$5)
+         RETURNING id`,
                 [
                     faker.company.name(),
                     faker.internet.url(),
@@ -125,7 +143,7 @@ async function main() {
             companyIds.push(rows[0].id);
         }
 
-        // ---- company_location
+        /* ---- company_location ---- */
         for (const cid of companyIds) {
             const k = randInt(1, 3);
             const chosen = faker.helpers.arrayElements(locationIds, k);
@@ -142,10 +160,11 @@ async function main() {
             }
         }
 
-        // ---- candidates
+        /* ---- candidates ---- */
         const candidateIds = [];
-        for (let i = 0; i < N.candidates; i++) {
-            const accId = pick(accountIds);
+        const candidateAccountPool = shuffle(accountIds).slice(0, N.candidates); // mỗi candidate 1 account khác nhau
+        for (let i = 0; i < candidateAccountPool.length; i++) {
+            const accId = candidateAccountPool[i];
             const { rows } = await client.query(
                 `INSERT INTO candidates(account_id, full_name, location_id, seniority,
                                 salary_expect_min, salary_expect_max, currency,
@@ -164,35 +183,43 @@ async function main() {
                     Math.random() < 0.5,
                     Math.random() < 0.3,
                     randInt(1, 100000),
-                    faker.lorem.sentences({ min: 1, max: 3 })
+                    faker.lorem.sentences(randInt(1, 3))
                 ]
             );
             if (rows[0]) candidateIds.push(rows[0].id);
         }
 
-        // ---- recruiters
+        /* ---- recruiters (company_id phải duy nhất) ---- */
+        const recruiterCount = Math.min(N.recruiters, companyIds.length);
+        const recruiterCompanyList = shuffle(companyIds).slice(0, recruiterCount); // không trùng company
+        const recruiterAccountPool = shuffle(
+            accountIds.filter(aid => !candidateAccountPool.includes(aid))
+        ).slice(0, recruiterCount); // tránh đụng accounts đã dùng cho candidate
+
         const recruiterIds = [];
-        for (let i = 0; i < N.recruiters; i++) {
-            const accId = pick(accountIds);
-            const companyId = pick(companyIds);
+        for (let i = 0; i < recruiterCount; i++) {
+            const companyId = recruiterCompanyList[i];
+            const accId = recruiterAccountPool[i] ?? shuffle(accountIds)[0]; // fallback nếu thiếu
+
             const { rows } = await client.query(
                 `INSERT INTO recruiters(account_id, full_name, avatar_resource_id, company_id)
          VALUES ($1,$2,$3,$4)
-         ON CONFLICT (account_id) DO NOTHING
+         ON CONFLICT DO NOTHING
          RETURNING id`,
                 [accId, faker.person.fullName(), randInt(1, 100000), companyId]
             );
             if (rows[0]) recruiterIds.push(rows[0].id);
         }
 
-        // ---- taxonomy: families → sub_families → roles
+        /* ---- taxonomy: families → sub_families → roles ---- */
         const familySeeds = ['Công nghệ thông tin','Thiết kế','Logistics','Kinh doanh','Kế toán','Nhân sự','Marketing','Sản xuất'];
         const familyIds = [];
         for (const name of faker.helpers.arrayElements(familySeeds, N.jobFamilies)) {
             const slug = faker.helpers.slugify(name.toLowerCase());
             const { rows } = await client.query(
                 `INSERT INTO job_families(name, slug) VALUES ($1,$2)
-         ON CONFLICT (name) DO NOTHING RETURNING id`,
+         ON CONFLICT (name) DO NOTHING
+         RETURNING id`,
                 [name, slug]
             );
             if (rows[0]) familyIds.push(rows[0].id);
@@ -203,7 +230,8 @@ async function main() {
             const n = cap(faker.word.noun());
             const { rows } = await client.query(
                 `INSERT INTO sub_families(name, job_family_id) VALUES ($1,$2)
-         ON CONFLICT (name) DO NOTHING RETURNING id`,
+         ON CONFLICT (name) DO NOTHING
+         RETURNING id`,
                 [n, pick(familyIds)]
             );
             if (rows[0]) subFamilyIds.push(rows[0].id);
@@ -219,13 +247,14 @@ async function main() {
             const name = `${pick(roleSeeds)}${Math.random() < 0.2 ? ' ' + cap(faker.word.adjective()) : ''}`;
             const { rows } = await client.query(
                 `INSERT INTO job_roles(name, sub_family_id) VALUES ($1,$2)
-         ON CONFLICT (name) DO NOTHING RETURNING id`,
+         ON CONFLICT (name) DO NOTHING
+         RETURNING id`,
                 [name, pick(subFamilyIds)]
             );
             if (rows[0]) jobRoleIds.push(rows[0].id);
         }
 
-        // ---- skills
+        /* ---- skills ---- */
         const skillSeeds = [
             'Java','Spring Boot','PostgreSQL','Redis','Kafka','Docker','Kubernetes','AWS','GCP','Azure',
             'React','Vue','Angular','Node.js','Python','Django','FastAPI','TensorFlow','PyTorch','Git',
@@ -237,13 +266,14 @@ async function main() {
             const aliases = JSON.stringify([name.toLowerCase(), faker.word.sample()]);
             const { rows } = await client.query(
                 `INSERT INTO skills(name, aliases) VALUES ($1, $2)
-         ON CONFLICT (name) DO NOTHING RETURNING id`,
+         ON CONFLICT (name) DO NOTHING
+         RETURNING id`,
                 [name, aliases]
             );
             if (rows[0]) skillIds.push(rows[0].id);
         }
 
-        // ---- jobs + descriptions + required skills
+        /* ---- jobs + descriptions + required skills ---- */
         const jobIds = [];
         for (let i = 0; i < N.jobs; i++) {
             const companyId = pick(companyIds);
@@ -263,7 +293,8 @@ async function main() {
             const { rows } = await client.query(
                 `INSERT INTO jobs(company_id, title, job_role_id, seniority, min_experience_years, location_id,
                           work_mode, salary_min, salary_max, currency, date_posted, date_expires, status)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id`,
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+         RETURNING id`,
                 [companyId, title, jobRoleId, seniority, minExp, locId, workMode, smin, smax, currency, posted, expires, status]
             );
             const jobId = rows[0].id;
@@ -296,7 +327,7 @@ async function main() {
             }
         }
 
-        // ---- candidate skills
+        /* ---- candidate skills ---- */
         for (const cid of candidateIds) {
             const chosen = faker.helpers.arrayElements(skillIds, randInt(3, 10));
             for (const sid of chosen) {
@@ -309,7 +340,7 @@ async function main() {
             }
         }
 
-        // ---- job applications
+        /* ---- job applications ---- */
         for (let i = 0; i < N.jobApps; i++) {
             const candidateId = pick(candidateIds);
             const jobId = pick(jobIds);
@@ -324,7 +355,7 @@ async function main() {
             );
         }
 
-        // ---- saved jobs
+        /* ---- saved jobs ---- */
         for (let i = 0; i < N.savedJobs; i++) {
             await client.query(
                 `INSERT INTO saved_jobs(candidate_id, job_id, saved_at)
@@ -334,7 +365,7 @@ async function main() {
             );
         }
 
-        // ---- resources
+        /* ---- resources ---- */
         for (let i = 0; i < N.resources; i++) {
             await client.query(
                 `INSERT INTO resources(mime_type, owner_id, owner_type, url, name)
