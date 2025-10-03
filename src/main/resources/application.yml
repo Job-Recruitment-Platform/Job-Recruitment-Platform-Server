@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: JobRecruitmentPlatform-Server
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/jrp}
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:niggamove}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}

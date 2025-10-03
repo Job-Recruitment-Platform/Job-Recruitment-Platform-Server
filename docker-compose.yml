@@ -1,0 +1,37 @@
+volumes:
+  pgdata:
+  redis_data:
+
+networks:
+  jrp-network:
+    driver: bridge
+
+
+services:
+  postgres:
+    image: postgres:18.0-alpine
+    container_name: jrp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: niggamove
+      POSTGRES_DB: jrp
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - jrp-network
+
+  redis:
+    image: redis:7.4
+    container_name: jrp-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"] # bật persistence AOF
+    networks:
+      - jrp-network
+
