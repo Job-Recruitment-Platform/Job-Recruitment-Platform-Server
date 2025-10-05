@@ -1,6 +1,5 @@
 networks:
-  default:
-    name: jrp-network
+  jrp-network:
     driver: bridge
 
 volumes:
