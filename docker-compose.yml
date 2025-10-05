@@ -1,10 +1,11 @@
-volumes:
-  pgdata:
-  redis_data:
-
 networks:
-  jrp-network:
+  default:
+    name: jrp-network
     driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
 
 
 services:
@@ -19,7 +20,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - jrp-network
 
@@ -30,7 +31,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
+      - redis-data:/data
     command: ["redis-server", "--appendonly", "yes"] # bật persistence AOF
     networks:
       - jrp-network
