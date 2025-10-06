@@ -1,0 +1,51 @@
+package org.toanehihi.jobrecruitmentplatformserver.domain.exception;
+
+import org.springframework.http.HttpStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public enum ErrorCode {
+    // Credentials (1001 - 1100)
+    EMAIL_ALREADY_EXISTED(1001, "Email already existed", HttpStatus.BAD_REQUEST),
+
+    // Auth (1101 - 1200)
+    AUTH_ACCOUNT_SUSPENDED(1101, "Your account has been suspended", HttpStatus.FORBIDDEN),
+    AUTH_INVALID_CREDENTIALS(1102, "Username or password is not correct", HttpStatus.BAD_REQUEST),
+    AUTH_UNAUTHORIZED(1103, "Unauthorized request", HttpStatus.FORBIDDEN),
+    ACCOUNT_RESET_TOKEN_INVALID(1104, "Reset token invalid", HttpStatus.FORBIDDEN),
+    ACCOUNT_PASSWORD_SAME_AS_OLD(1105, "New password is as same as old", HttpStatus.FORBIDDEN),
+    ACCOUNT_VERIFY_TOKEN_INVALID(1106, "Verify email token invalid", HttpStatus.FORBIDDEN),
+    ACCOUNT_ALREADY_VERIFIED(1107, "Account already verify", HttpStatus.FORBIDDEN),
+
+    // JWT (1201 - 1300)
+    JWT_INVALID_TOKEN(1201, "Token is invalid or expired", HttpStatus.FORBIDDEN),
+    JWT_GENERATION_ERROR(1202, "Jwt generation failed", HttpStatus.INTERNAL_SERVER_ERROR),
+    JWT_TOKEN_BLACKLISTED(1203, "Your token has been blacklisted", HttpStatus.BAD_REQUEST),
+    JWT_EXPIRED_TOKEN(1204, "You token has been expired", HttpStatus.BAD_REQUEST),
+
+    // Account (1301 - 1400)
+    ACCOUNT_NOT_FOUND(1301, "Account not found", HttpStatus.NOT_FOUND),
+    ACCOUNT_ALREADY_LINKED_GOOGLE(1302, "Your account already linked to a google account", HttpStatus.BAD_REQUEST),
+    ACCOUNT_GOOGLE_EMAIL_MISMATCH(1303, "Your google accounts does not match", HttpStatus.BAD_REQUEST),
+    ACCOUNT_GOOGLE_ALREADY_USED(1304, "Google account already used", HttpStatus.BAD_REQUEST),
+
+    // Role (1401 - 1500)
+    ROLE_NOT_FOUND(1401, "Role not found", HttpStatus.NOT_FOUND),
+
+    // Email (9701 - 9800)
+    EMAIL_SEND_FAILED(9701, "Failed to send email", HttpStatus.BAD_GATEWAY),
+
+    // Data errors(9801 - 9900)
+    ENUM_INVALID_VALUE(9801, "Invalid enum value", HttpStatus.BAD_REQUEST),
+
+    // System errors (9901 - 9999)
+    SYSTEM_UNKNOWN_ERROR(9998, "System unknow error", HttpStatus.INTERNAL_SERVER_ERROR),
+    SYSTEM_INTERNAL_ERROR(9999, "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+
+    private int code;
+    private String message;
+    private HttpStatus status;
+}
