@@ -2,9 +2,10 @@ spring:
   application:
     name: JobRecruitmentPlatform-Server
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/jrp}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/jrp?stringtype=unspecified}
     username: ${DATABASE_USERNAME:root}
     password: ${DATABASE_PASSWORD:niggamove}
+    driver-class-name: org.postgresql.Driver
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -13,4 +14,35 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: BotCV
+          secret-key: ${JWT_SECRET}
+          access-token:
+            expiration: 600000
+          refresh-token:
+            expiration: 604800000
+      client:
+        registration:
+          google:
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
