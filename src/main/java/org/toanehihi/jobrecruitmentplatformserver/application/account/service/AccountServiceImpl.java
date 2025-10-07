@@ -15,7 +15,6 @@ import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.rep
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.ForgotPasswordRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.ResendVerificationRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.ResetPasswordRequest;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

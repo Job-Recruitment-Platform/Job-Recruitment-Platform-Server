@@ -20,16 +20,16 @@ public class Location {
 	private Long id;
 
     @Column(name = "street_address")
-    private String streetAddress;    // số nhà, tên đường
+    private String streetAddress;    
 
-    private String ward;             // phường/xã
+    private String ward;            
 
-    private String district;         // quận/huyện/thị xã
+    private String district;        
 
     @Column(name = "province_city")
-    private String provinceCity;     // tỉnh hoặc thành phố trực thuộc TW
+    private String provinceCity;     
 
-    private String country;          // quốc gia
+    private String country;         
 
 	@Column(name = "lat")
 	private BigDecimal lat;

@@ -6,6 +6,7 @@ import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.Re
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.ResetPasswordRequest;
 
 public interface AccountService {
+
     void resendVerificationEmail(ResendVerificationRequest request);
 
     void verifyEmail(String token);
