@@ -31,6 +31,7 @@ public enum ErrorCode {
     ACCOUNT_ALREADY_LINKED_GOOGLE(1302, "Your account already linked to a google account", HttpStatus.BAD_REQUEST),
     ACCOUNT_GOOGLE_EMAIL_MISMATCH(1303, "Your google accounts does not match", HttpStatus.BAD_REQUEST),
     ACCOUNT_GOOGLE_ALREADY_USED(1304, "Google account already used", HttpStatus.BAD_REQUEST),
+    ACCOUNT_CANDIDATE_NOT_FOUND(1305, "Candidate not found for this account", HttpStatus.CONFLICT),
 
     // Role (1401 - 1500)
     ROLE_NOT_FOUND(1401, "Role not found", HttpStatus.NOT_FOUND),
