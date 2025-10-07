@@ -4,5 +4,5 @@ import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.candidate.
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.candidate.CandidateResponse;
 
 public interface CandidateService {
-    CandidateResponse updateProfile(Long accountId, CandidateRequest request);
+    CandidateResponse updateCandidateProfile(Long accountId, CandidateRequest request);
 }

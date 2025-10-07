@@ -39,7 +39,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     @Transactional
-    public CandidateResponse updateProfile(Long accountId, CandidateRequest request) {
+    public CandidateResponse updateCandidateProfile(Long accountId, CandidateRequest request) {
         Candidate candidate = candidateRepository.findById(accountId)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_CANDIDATE_NOT_FOUND));
 
@@ -58,6 +58,7 @@ public class CandidateServiceImpl implements CandidateService {
         }
 
         // Update skill
+
         candidate.getSkills().clear();
         Set<CandidateSkill> updatedSkills = new HashSet<>();
         for (CandidateSkillRequest skillRequest : request.getSkills()) {
@@ -70,17 +71,17 @@ public class CandidateServiceImpl implements CandidateService {
             CandidateSkill candidateSkill = CandidateSkill.builder()
                     .candidate(candidate)
                     .skill(skill)
+                    .level(skillRequest.getLevel())
                     .build();
             updatedSkills.add(candidateSkill);
         }
-
         candidate.getSkills().addAll(updatedSkills);
-        candidateRepository.save(candidate);
 
         // Update others
         candidateMapper.updateCandidate(candidate, request);
         candidate.setDateUpdated(OffsetDateTime.now());
         Candidate savedCandidate = candidateRepository.save(candidate);
+
         CandidateResponse response = candidateMapper.toResponse(savedCandidate);
         response.setSkills(updatedSkills.stream().map(candidateSkillMapper::toResponse).collect(Collectors.toSet()));
         return response;

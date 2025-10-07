@@ -68,7 +68,7 @@ public class Candidate {
 	@Column(name = "date_updated")
 	private OffsetDateTime dateUpdated;
 
-	@OneToMany(mappedBy = "candidate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "candidate", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
 	private Set<CandidateSkill> skills = new HashSet<>();
 }
