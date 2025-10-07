@@ -9,7 +9,6 @@ import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.SeniorityLe
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
- 
 
 @Getter
 @Setter
@@ -69,9 +68,7 @@ public class Candidate {
 	@Column(name = "date_updated")
 	private OffsetDateTime dateUpdated;
 
-	@OneToMany(mappedBy = "candidate")
+	@OneToMany(mappedBy = "candidate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Builder.Default
 	private Set<CandidateSkill> skills = new HashSet<>();
 }
-
-

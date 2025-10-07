@@ -20,10 +20,11 @@ public class Skill {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "name")
+	@Column(name = "name", unique = true)
 	private String name;
 
-	// Map JSONB as text to keep it simple and portable. Add a converter later if needed.
+	// Map JSONB as text to keep it simple and portable. Add a converter later if
+	// needed.
 	@Column(name = "aliases", columnDefinition = "jsonb")
 	private String aliases;
 
@@ -31,5 +32,3 @@ public class Skill {
 	@Column(name = "date_created", nullable = false)
 	private OffsetDateTime dateCreated;
 }
-
-
