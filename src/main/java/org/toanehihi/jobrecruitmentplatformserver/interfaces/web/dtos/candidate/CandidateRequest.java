@@ -1,15 +1,15 @@
-package org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account;
+package org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.candidate;
 
 import java.util.Set;
 
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.SeniorityLevel;
-import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.candidate.SkillLevelRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.location.LocationRequest;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.skill.CandidateSkillRequest;
 
 import lombok.Getter;
 
 @Getter
-public class UpdateProfileRequest {
+public class CandidateRequest {
     private String fullName;
     private LocationRequest location;
     private SeniorityLevel seniority;
@@ -18,7 +18,6 @@ public class UpdateProfileRequest {
     private String currency;
     private Boolean remotePref;
     private Boolean relocationPref;
-    private Long avatarResourceId;
     private String bio;
-    private Set<SkillLevelRequest> skills;
+    private Set<CandidateSkillRequest> skills;
 }
