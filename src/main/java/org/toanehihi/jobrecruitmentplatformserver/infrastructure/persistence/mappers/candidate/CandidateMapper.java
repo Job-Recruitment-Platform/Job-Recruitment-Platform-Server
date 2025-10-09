@@ -1,8 +1,11 @@
 package org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.candidate;
 
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Candidate;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.location.LocationMapper;
+import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.skill.CandidateSkillMapper;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.candidate.CandidateRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.candidate.CandidateResponse;
 
@@ -12,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CandidateMapper {
     private final LocationMapper locationMapper;
+    private final CandidateSkillMapper candidateSkillMapper;
+
     public void updateCandidate(Candidate candidate, CandidateRequest request) {
         candidate.setFullName(request.getFullName());
         candidate.setSeniority(request.getSeniority());
@@ -28,7 +33,7 @@ public class CandidateMapper {
                 .id(candidate.getId())
                 .accountId(candidate.getAccount().getId())
                 .fullName(candidate.getFullName())
-                .location(locationMapper.toResponse(candidate.getLocation()))
+                .location(candidate.getLocation() != null ? locationMapper.toResponse(candidate.getLocation()) : null)
                 .seniority(candidate.getSeniority())
                 .salaryExpectMin(candidate.getSalaryExpectMin())
                 .salaryExpectMax(candidate.getSalaryExpectMax())
@@ -39,6 +44,8 @@ public class CandidateMapper {
                 .bio(candidate.getBio())
                 .dateCreated(candidate.getDateCreated())
                 .dateUpdated(candidate.getDateUpdated())
+                .skills(candidate.getSkills().stream().map(candidateSkillMapper::toResponse)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 }

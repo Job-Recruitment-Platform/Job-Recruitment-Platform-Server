@@ -55,14 +55,14 @@ public class AccountServiceImpl implements AccountService {
         String redisValue = tokenService.getValue(redisKey);
 
         if (redisValue == null) {
-            throw new AppException(ErrorCode.ACCOUNT_RESET_TOKEN_INVALID);
+            throw new AppException(ErrorCode.AUTH_RESET_TOKEN_INVALID);
         }
 
         Account account = accountRepository.findByEmail(redisValue)
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         if (passwordEncoder.matches(request.getNewPassword(), account.getPassword())) {
-            throw new AppException(ErrorCode.ACCOUNT_PASSWORD_SAME_AS_OLD);
+            throw new AppException(ErrorCode.PASSWORD_SAME_AS_OLD);
         }
 
         account.setPassword(passwordEncoder.encode(request.getNewPassword()));

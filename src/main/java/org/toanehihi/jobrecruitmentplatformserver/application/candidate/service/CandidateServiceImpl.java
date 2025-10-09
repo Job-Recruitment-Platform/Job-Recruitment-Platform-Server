@@ -4,23 +4,28 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 import org.toanehihi.jobrecruitmentplatformserver.domain.exception.AppException;
 import org.toanehihi.jobrecruitmentplatformserver.domain.exception.ErrorCode;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.Account;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Candidate;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.CandidateSkill;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.Job;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Location;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.SavedJob;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Skill;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.candidate.CandidateMapper;
+import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.job.SavedJobMapper;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.location.LocationMapper;
-import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.skill.CandidateSkillMapper;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.CandidateRepository;
+import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.JobRepository;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.LocationRepository;
+import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.SavedJobRepository;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.SkillRepository;
+import org.toanehihi.jobrecruitmentplatformserver.infrastructure.security.CurrentAccountProvider;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.candidate.CandidateRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.candidate.CandidateResponse;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.SavedJobResponse;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.skill.CandidateSkillRequest;
 
 import jakarta.transaction.Transactional;
@@ -33,9 +38,17 @@ public class CandidateServiceImpl implements CandidateService {
     private final CandidateRepository candidateRepository;
     private final LocationRepository locationRepository;
     private final SkillRepository skillRepository;
+    private final JobRepository jobRepository;
+    private final SavedJobRepository savedJobRepository;
     private final LocationMapper locationMapper;
     private final CandidateMapper candidateMapper;
-    private final CandidateSkillMapper candidateSkillMapper;
+    private final SavedJobMapper savedJobMapper;
+    private final CurrentAccountProvider currentAccountProvider;
+
+    @Override
+    public CandidateResponse getProfile() {
+        return candidateMapper.toResponse(getCandidate());
+    }
 
     @Override
     @Transactional
@@ -58,8 +71,6 @@ public class CandidateServiceImpl implements CandidateService {
         }
 
         // Update skill
-
-        candidate.getSkills().clear();
         Set<CandidateSkill> updatedSkills = new HashSet<>();
         for (CandidateSkillRequest skillRequest : request.getSkills()) {
             Skill skill = skillRepository.findByName(skillRequest.getSkillName())
@@ -75,6 +86,7 @@ public class CandidateServiceImpl implements CandidateService {
                     .build();
             updatedSkills.add(candidateSkill);
         }
+        candidate.getSkills().clear();
         candidate.getSkills().addAll(updatedSkills);
 
         // Update others
@@ -82,9 +94,33 @@ public class CandidateServiceImpl implements CandidateService {
         candidate.setDateUpdated(OffsetDateTime.now());
         Candidate savedCandidate = candidateRepository.save(candidate);
 
-        CandidateResponse response = candidateMapper.toResponse(savedCandidate);
-        response.setSkills(updatedSkills.stream().map(candidateSkillMapper::toResponse).collect(Collectors.toSet()));
-        return response;
+        return candidateMapper.toResponse(savedCandidate);
+    }
+
+    @Override
+    public SavedJobResponse saveJob(Long jobId) {
+        Candidate candidate = getCandidate();
+        Job job = jobRepository.findById(jobId).orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_FOUND));
+        SavedJob savedJob = SavedJob.builder()
+                .candidate(candidate)
+                .job(job)
+                .savedAt(OffsetDateTime.now())
+                .build();
+        SavedJob result = savedJobRepository.save(savedJob);
+        return savedJobMapper.toResponse(result);
+    }
+
+    @Override
+    public void removeSavedJob(Long jobId) {
+        Candidate candidate = getCandidate();
+        savedJobRepository.deleteByCandidateAndJobId(candidate, jobId);
+    }
+
+    // Private methods
+    private Candidate getCandidate() {
+        Account account = currentAccountProvider.getCurrentAccount();
+        return candidateRepository.findById(account.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
     }
 
 }
