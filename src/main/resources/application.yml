@@ -16,13 +16,15 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        jdbc:
+          time_zone: Asia/Ho_Chi_Minh
         dialect: org.hibernate.dialect.PostgreSQLDialect
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: BotCV
-          secret-key: ${JWT_SECRET}
+          secret-key: ${JWT_SECRET:7d38bb48b74cc00cfe9b83171c52042abc4a4eec296217f154ae2d810d070879}
           access-token:
             expiration: 600000
           refresh-token:
@@ -30,19 +32,20 @@ spring:
       client:
         registration:
           google:
-            client-id: ${CLIENT_ID}
-            client-secret: ${CLIENT_SECRET}
+            client-id: ${CLIENT_ID:3503765693-1jivvacrfg59brqfdd7gm0imfv25r8ge.apps.googleusercontent.com}
+            client-secret: ${CLIENT_SECRET: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}
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: ${MAIL_USERNAME:hocongtoan987@gmail.com}
+    password: ${MAIL_PASSWORD:vaug kzao cxdl uxte}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}

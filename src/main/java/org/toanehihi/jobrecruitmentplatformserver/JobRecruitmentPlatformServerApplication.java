@@ -1,9 +1,12 @@
 package org.toanehihi.jobrecruitmentplatformserver;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.github.cdimascio.dotenv.Dotenv;
+
+import java.util.TimeZone;
 
 @SpringBootApplication
 public class JobRecruitmentPlatformServerApplication {
@@ -14,7 +17,11 @@ public class JobRecruitmentPlatformServerApplication {
 				.ignoreIfMissing()
 				.load();
 		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+
+        String tz = System.getProperty("APP_TIMEZONE", "Asia/Ho_Chi_Minh");
+        System.setProperty("user.timezone", tz);
+        TimeZone.setDefault(TimeZone.getTimeZone(tz));
+
 		SpringApplication.run(JobRecruitmentPlatformServerApplication.class, args);
 	}
-
 }
