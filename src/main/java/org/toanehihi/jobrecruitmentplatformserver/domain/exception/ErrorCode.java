@@ -37,6 +37,9 @@ public enum ErrorCode {
     // Role (1401 - 1500)
     ROLE_NOT_FOUND(1401, "Role not found", HttpStatus.NOT_FOUND),
 
+    // Job (1501 - 1600)
+    JOB_NOT_FOUND(1501, "Job not found", HttpStatus.NOT_FOUND),
+
     // Email (9701 - 9800)
     EMAIL_SEND_FAILED(9701, "Failed to send email", HttpStatus.BAD_GATEWAY),
 
