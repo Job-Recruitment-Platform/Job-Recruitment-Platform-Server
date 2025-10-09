@@ -2,6 +2,7 @@ package org.toanehihi.jobrecruitmentplatformserver.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.EmploymentType;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.JobStatus;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.SeniorityLevel;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.WorkMode;
@@ -39,6 +40,10 @@ public class Job {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "seniority")
 	private SeniorityLevel seniority;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "employment_type")
+    private EmploymentType employmentType;
 
 	@Column(name = "min_experience_years")
 	private Integer minExperienceYears;

@@ -14,6 +14,15 @@ CREATE TYPE seniority_level AS ENUM (
     'MANAGER'
 );
 
+CREATE TYPE employment_type AS ENUM (
+    'FULL_TIME',
+    'PART_TIME',
+    'CONTRACT',
+    'INTERNSHIP',
+    'VOLUNTEER',
+    'TEMPORARY'
+);
+
 CREATE TYPE account_status AS ENUM ('ACTIVE', 'SUSPENDED');
 
 CREATE TYPE auth_provider AS ENUM ('LOCAL', 'GOOGLE');
@@ -242,7 +251,8 @@ CREATE TABLE
         company_id BIGINT NOT NULL,
         title VARCHAR(200) NOT NULL,
         job_role_id BIGINT,
-        seniority seniority_level,
+        seniority seniority_level NOT NULL,
+        employment_type employment_type NOT NULL,
         min_experience_years INTEGER,
         location_id BIGINT,
         work_mode work_mode NOT NULL,
