@@ -24,4 +24,8 @@ public class JobController {
         return jobService.getAllJobs(page, size, sortBy, sortDir);
     }
 
+    @GetMapping("/search")
+    public String searchJobs() {
+        return null;
+    }
 }
