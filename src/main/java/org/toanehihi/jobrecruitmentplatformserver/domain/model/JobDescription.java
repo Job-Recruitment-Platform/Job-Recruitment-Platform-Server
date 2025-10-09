@@ -36,8 +36,6 @@ public class JobDescription {
 	@Column(name = "benefits", columnDefinition = "text")
 	private String benefits;
 
-	@Column(name = "tech_stack", columnDefinition = "text")
-	private String techStack;
 
 	@Column(name = "hiring_process", columnDefinition = "text")
 	private String hiringProcess;

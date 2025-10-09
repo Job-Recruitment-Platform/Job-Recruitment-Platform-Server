@@ -293,7 +293,6 @@ CREATE TABLE
         requirements TEXT,
         nice_to_have TEXT,
         benefits TEXT,
-        tech_stack TEXT,
         hiring_process TEXT,
         notes TEXT,
         CONSTRAINT fk_job_description_job FOREIGN KEY (job_id) REFERENCES jobs (id) ON DELETE CASCADE,
