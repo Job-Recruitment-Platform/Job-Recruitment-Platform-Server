@@ -38,7 +38,6 @@ public class JobMapper {
                 .requirements(job.getDescription().getRequirements())
                 .niceToHave(job.getDescription().getNiceToHave())
                 .benefits(job.getDescription().getBenefits())
-                .techStack(job.getDescription().getTechStack())
                 .hiringProcess(job.getDescription().getHiringProcess())
                 .notes(job.getDescription().getNotes())
                 .build();
