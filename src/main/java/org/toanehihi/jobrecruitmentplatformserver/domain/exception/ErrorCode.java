@@ -10,15 +10,14 @@ import lombok.Getter;
 public enum ErrorCode {
     // Credentials (1001 - 1100)
     EMAIL_ALREADY_EXISTED(1001, "Email already existed", HttpStatus.BAD_REQUEST),
+    INVALID_CREDENTIALS(1002, "Username or password is not correct", HttpStatus.BAD_REQUEST),
+    PASSWORD_SAME_AS_OLD(1003, "New password is as same as old", HttpStatus.FORBIDDEN),
 
     // Auth (1101 - 1200)
-    AUTH_ACCOUNT_SUSPENDED(1101, "Your account has been suspended", HttpStatus.FORBIDDEN),
-    AUTH_INVALID_CREDENTIALS(1102, "Username or password is not correct", HttpStatus.BAD_REQUEST),
-    AUTH_UNAUTHORIZED(1103, "Unauthorized request", HttpStatus.FORBIDDEN),
-    ACCOUNT_RESET_TOKEN_INVALID(1104, "Reset token invalid", HttpStatus.FORBIDDEN),
-    ACCOUNT_PASSWORD_SAME_AS_OLD(1105, "New password is as same as old", HttpStatus.FORBIDDEN),
-    ACCOUNT_VERIFY_TOKEN_INVALID(1106, "Verify email token invalid", HttpStatus.FORBIDDEN),
-    ACCOUNT_ALREADY_VERIFIED(1107, "Account already verify", HttpStatus.FORBIDDEN),
+    AUTH_UNAUTHENTICATED(1101, "Unauthenticated", HttpStatus.FORBIDDEN),
+    AUTH_UNAUTHORIZED(1102, "Unauthorized request", HttpStatus.FORBIDDEN),
+    AUTH_ACCOUNT_SUSPENDED(1103, "Your account has been suspended", HttpStatus.FORBIDDEN),
+    AUTH_RESET_TOKEN_INVALID(1104, "Reset token invalid", HttpStatus.FORBIDDEN),
 
     // JWT (1201 - 1300)
     JWT_INVALID_TOKEN(1201, "Token is invalid or expired", HttpStatus.FORBIDDEN),
@@ -32,6 +31,8 @@ public enum ErrorCode {
     ACCOUNT_GOOGLE_EMAIL_MISMATCH(1303, "Your google accounts does not match", HttpStatus.BAD_REQUEST),
     ACCOUNT_GOOGLE_ALREADY_USED(1304, "Google account already used", HttpStatus.BAD_REQUEST),
     ACCOUNT_CANDIDATE_NOT_FOUND(1305, "Candidate not found for this account", HttpStatus.CONFLICT),
+    ACCOUNT_VERIFY_TOKEN_INVALID(1306, "Verify email token invalid", HttpStatus.FORBIDDEN),
+    ACCOUNT_ALREADY_VERIFIED(1307, "Account already verify", HttpStatus.FORBIDDEN),
 
     // Role (1401 - 1500)
     ROLE_NOT_FOUND(1401, "Role not found", HttpStatus.NOT_FOUND),
