@@ -86,10 +86,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ BadCredentialsException.class, UsernameNotFoundException.class,
             InternalAuthenticationServiceException.class })
     public ResponseEntity<DataResponse<Void>> handleAuthenticationException(Exception ex) {
-        return ResponseEntity.status(ErrorCode.AUTH_INVALID_CREDENTIALS.getStatus())
+        return ResponseEntity.status(ErrorCode.INVALID_CREDENTIALS.getStatus())
                 .body(DataResponse.<Void>builder()
-                        .code(ErrorCode.AUTH_INVALID_CREDENTIALS.getCode())
-                        .message(ErrorCode.AUTH_INVALID_CREDENTIALS.getMessage())
+                        .code(ErrorCode.INVALID_CREDENTIALS.getCode())
+                        .message(ErrorCode.INVALID_CREDENTIALS.getMessage())
                         .build());
     }
 }

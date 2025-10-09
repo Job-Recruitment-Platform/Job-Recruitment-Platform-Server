@@ -88,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
                     .refreshToken(refreshToken)
                     .build();
         } catch (BadCredentialsException e) {
-            throw new AppException(ErrorCode.AUTH_INVALID_CREDENTIALS);
+            throw new AppException(ErrorCode.INVALID_CREDENTIALS);
         }
     }
 

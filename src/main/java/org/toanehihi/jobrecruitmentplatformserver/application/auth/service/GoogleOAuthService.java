@@ -32,7 +32,7 @@ public class GoogleOAuthService {
             GoogleIdToken googleIdToken = verifier.verify(idToken);
 
             if (googleIdToken == null) {
-                throw new AppException(ErrorCode.AUTH_INVALID_CREDENTIALS);
+                throw new AppException(ErrorCode.INVALID_CREDENTIALS);
             }
 
             GoogleIdToken.Payload payload = googleIdToken.getPayload();
@@ -46,7 +46,7 @@ public class GoogleOAuthService {
 
         } catch (Exception e) {
             log.error("Failed to verify Google token: {}", e.getMessage());
-            throw new AppException(ErrorCode.AUTH_INVALID_CREDENTIALS);
+            throw new AppException(ErrorCode.INVALID_CREDENTIALS);
         }
     }
 
