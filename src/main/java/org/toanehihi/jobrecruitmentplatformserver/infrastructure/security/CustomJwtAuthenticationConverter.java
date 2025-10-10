@@ -17,9 +17,11 @@ import org.toanehihi.jobrecruitmentplatformserver.domain.model.Account;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CustomJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
     private final AccountRepository accountRepository;
@@ -33,6 +35,9 @@ public class CustomJwtAuthenticationConverter implements Converter<Jwt, Abstract
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         Collection<? extends GrantedAuthority> authorities = account.getAuthorities();
+
+        log.info("Authenticated account: {} with authorities: {}", email, authorities);
+
 
         return new UsernamePasswordAuthenticationToken(account, jwt, authorities);
     }
