@@ -6,6 +6,7 @@ import org.toanehihi.jobrecruitmentplatformserver.domain.model.JobApplication;
 
 @Repository
 public interface JobApplicationRepository extends JpaRepository<JobApplication, Long> {
+    boolean existsJobApplicationByJobId(Long jobId);
 }
 
 

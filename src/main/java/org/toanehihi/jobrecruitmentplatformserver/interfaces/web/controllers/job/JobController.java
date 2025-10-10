@@ -1,12 +1,13 @@
 package org.toanehihi.jobrecruitmentplatformserver.interfaces.web.controllers.job;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.toanehihi.jobrecruitmentplatformserver.application.job.service.JobService;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.Account;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.annotation.CurrentUser;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.DataResponse;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.PageResult;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.CreateJobRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.JobResponse;
 
 @RestController
@@ -24,8 +25,11 @@ public class JobController {
         return jobService.getAllJobs(page, size, sortBy, sortDir);
     }
 
-    @GetMapping("/search")
-    public String searchJobs() {
-        return null;
+    @PostMapping
+    public DataResponse<JobResponse> createJob(@CurrentUser Account account, @RequestBody CreateJobRequest request) {
+        return DataResponse.<JobResponse>builder()
+                .data(jobService.createJob(account, request))
+                .build();
     }
+
 }

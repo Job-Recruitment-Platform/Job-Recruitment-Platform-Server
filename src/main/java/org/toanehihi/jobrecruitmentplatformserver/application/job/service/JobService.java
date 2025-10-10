@@ -1,9 +1,23 @@
 package org.toanehihi.jobrecruitmentplatformserver.application.job.service;
 
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.Account;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.Job;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.CreateJobRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.JobResponse;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.PageResult;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.UpdateJobRequest;
 
 public interface JobService {
-    JobResponse getJobById(Long id);
+    JobResponse findJobById(Long id);
     PageResult<JobResponse> getAllJobs(int page, int size, String sortBy, String sortDir);
+
+    JobResponse createJob(Account account, CreateJobRequest createJobRequest);
+
+    JobResponse updateJob(Account account,Long id, UpdateJobRequest request);
+
+    JobResponse cancelJob(Long id);
+
+    void deleteJob(Long id);
+
+
 }

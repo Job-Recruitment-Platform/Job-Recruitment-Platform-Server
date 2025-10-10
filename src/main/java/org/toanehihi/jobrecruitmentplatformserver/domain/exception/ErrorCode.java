@@ -33,12 +33,25 @@ public enum ErrorCode {
     ACCOUNT_CANDIDATE_NOT_FOUND(1305, "Candidate not found for this account", HttpStatus.CONFLICT),
     ACCOUNT_VERIFY_TOKEN_INVALID(1306, "Verify email token invalid", HttpStatus.FORBIDDEN),
     ACCOUNT_ALREADY_VERIFIED(1307, "Account already verify", HttpStatus.FORBIDDEN),
+    ACCOUNT_RECRUITER_NOT_FOUND(1308, "Recruiter not found for this account", HttpStatus.CONFLICT),
+
 
     // Role (1401 - 1500)
     ROLE_NOT_FOUND(1401, "Role not found", HttpStatus.NOT_FOUND),
+    ACCESS_FORBIDDEN(1403, "Access forbidden", HttpStatus.FORBIDDEN),
+
 
     // Job (1501 - 1600)
     JOB_NOT_FOUND(1501, "Job not found", HttpStatus.NOT_FOUND),
+    JOB_ROLE_NOT_FOUND(1502, "Job role not found", HttpStatus.NOT_FOUND),
+    JOB_CLOSED_CANNOT_UPDATE(1503, "Job is closed, cannot update", HttpStatus.BAD_REQUEST),
+    JOB_HAS_APPLICANTS_CANNOT_UPDATE(1504, "Job has applicants, cannot update", HttpStatus.BAD_REQUEST),
+
+    // Skill (1701 - 1750)
+    SKILL_NOT_FOUND(1701, "Skill not found", HttpStatus.NOT_FOUND),
+
+    // Location (1601 - 1700)
+    LOCATION_NOT_FOUND(1601, "Location not found", HttpStatus.NOT_FOUND),
 
     // Email (9701 - 9800)
     EMAIL_SEND_FAILED(9701, "Failed to send email", HttpStatus.BAD_GATEWAY),

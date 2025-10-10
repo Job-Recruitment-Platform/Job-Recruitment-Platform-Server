@@ -1,6 +1,8 @@
 package org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.job;
 
 import org.springframework.stereotype.Component;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.JobDescription;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.CreateJobRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.JobResponse;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Job;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Location;
@@ -40,6 +42,31 @@ public class JobMapper {
                 .benefits(job.getDescription().getBenefits())
                 .hiringProcess(job.getDescription().getHiringProcess())
                 .notes(job.getDescription().getNotes())
+                .build();
+    }
+
+    public Job toEntity(CreateJobRequest request){
+        return Job.builder()
+                .title(request.getTitle())
+                .jobRole(null)
+                .seniority(request.getSeniorityLevel())
+                .employmentType(request.getEmploymentType())
+                .minExperienceYears(request.getMinExperienceYears())
+                .location(null)
+                .workMode(request.getWorkMode())
+                .salaryMin(request.getSalaryMin())
+                .salaryMax(request.getSalaryMax())
+                .currency(request.getCurrency())
+                .dateExpires(request.getDateExpires())
+                .description(JobDescription.builder()
+                        .summary(request.getSummary())
+                        .responsibilities(request.getResponsibilities())
+                        .requirements(request.getRequirements())
+                        .niceToHave(request.getNiceToHave())
+                        .benefits(request.getBenefits())
+                        .hiringProcess(request.getHiringProcess())
+                        .notes(request.getNotes())
+                        .build())
                 .build();
     }
 }
