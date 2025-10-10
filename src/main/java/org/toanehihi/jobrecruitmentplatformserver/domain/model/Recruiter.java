@@ -43,5 +43,3 @@ public class Recruiter {
 	@Column(name = "date_updated", nullable = false)
 	private OffsetDateTime dateUpdated;
 }
-
-

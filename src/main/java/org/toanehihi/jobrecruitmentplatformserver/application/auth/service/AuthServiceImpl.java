@@ -14,15 +14,20 @@ import org.toanehihi.jobrecruitmentplatformserver.domain.exception.AppException;
 import org.toanehihi.jobrecruitmentplatformserver.domain.exception.ErrorCode;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Account;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Candidate;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.Company;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.Recruiter;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Role;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.AccountStatus;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.AuthProvider;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.mappers.account.AccountMapper;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.AccountRepository;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.CandidateRepository;
+import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.CompanyRepository;
+import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.RecruiterRepository;
 import org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.repositories.RoleRepository;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.AccountResponse;
-import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.CreateAccountRequest;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.CandidateAccountRequest;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.RecruiterAccountRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.auth.AuthenticationResponse;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.auth.GoogleLoginRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.auth.LoginRequest;
@@ -40,6 +45,8 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final AccountRepository accountRepository;
     private final CandidateRepository candidateRepository;
+    private final RecruiterRepository recruiterRepository;
+    private final CompanyRepository companyRepository;
     private final RoleRepository roleRepository;
     private final AccountMapper accountMapper;
     private final JwtService jwtService;
@@ -48,17 +55,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public AccountResponse registerWithCredentials(CreateAccountRequest request) {
+    public AccountResponse candidateRegister(CandidateAccountRequest request) {
+        Role role = roleRepository.findByName("CANDIDATE")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+
         if (accountRepository.existsByEmail(request.getEmail())) {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTED);
         }
 
-        Role role = roleRepository.findByName("CANDIDATE")
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
-
-        Account account = accountMapper.toAccount(request);
+        Account account = accountMapper.toCandidateAccount(request);
         account.setRole(role);
-
         Account savedAccount = accountRepository.save(account);
 
         Candidate candidate = Candidate.builder()
@@ -66,8 +72,38 @@ public class AuthServiceImpl implements AuthService {
                 .fullName(request.getFullName())
                 .avatarResourceId(123L) // create default avatar later
                 .build();
-
         candidateRepository.save(candidate);
+
+        return accountMapper.toResponse(savedAccount);
+    }
+
+    @Override
+    @Transactional
+    public AccountResponse recruiterRegister(RecruiterAccountRequest request) {
+        Role role = roleRepository.findByName("RECRUITER")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+
+        if (accountRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTED);
+        }
+
+        Account account = accountMapper.toRecruiterAccount(request);
+        account.setRole(role);
+        Account savedAccount = accountRepository.save(account);
+
+        Company company = Company.builder()
+                .name(request.getCompanyName())
+                .build();
+        Company savedCompany = companyRepository.save(company);
+
+        Recruiter recruiter = Recruiter.builder()
+                .account(savedAccount)
+                .fullName(request.getFullName())
+                .avatarResourceId(123L) // create default avatar later
+                .company(savedCompany)
+                .build();
+        recruiterRepository.save(recruiter);
+
         return accountMapper.toResponse(savedAccount);
     }
 

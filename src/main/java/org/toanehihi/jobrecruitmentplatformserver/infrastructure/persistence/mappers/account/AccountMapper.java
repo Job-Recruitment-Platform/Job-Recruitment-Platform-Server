@@ -8,7 +8,8 @@ import org.toanehihi.jobrecruitmentplatformserver.domain.model.Account;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.AccountStatus;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.AuthProvider;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.AccountResponse;
-import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.CreateAccountRequest;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.CandidateAccountRequest;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.RecruiterAccountRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +18,18 @@ import lombok.RequiredArgsConstructor;
 public class AccountMapper {
     private final PasswordEncoder passwordEncoder;
 
-    public Account toAccount(CreateAccountRequest request) {
+    public Account toCandidateAccount(CandidateAccountRequest request) {
+        return Account.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .status(AccountStatus.ACTIVE)
+                .provider(AuthProvider.LOCAL)
+                .dateCreated(OffsetDateTime.now())
+                .dateUpdated(OffsetDateTime.now())
+                .build();
+    }
+
+    public Account toRecruiterAccount(RecruiterAccountRequest request) {
         return Account.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))

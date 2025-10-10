@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.toanehihi.jobrecruitmentplatformserver.application.auth.service.AuthService;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.DataResponse;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.AccountResponse;
-import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.CreateAccountRequest;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.CandidateAccountRequest;
+import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.account.RecruiterAccountRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.auth.AuthenticationResponse;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.auth.GoogleLoginRequest;
 import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.auth.LoginRequest;
@@ -23,10 +24,17 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/register")
-    public DataResponse<AccountResponse> register(@Valid @RequestBody CreateAccountRequest request) {
+    @PostMapping("/register/candidate")
+    public DataResponse<AccountResponse> candidateRegister(@Valid @RequestBody CandidateAccountRequest request) {
         return DataResponse.<AccountResponse>builder()
-                .data(authService.registerWithCredentials(request))
+                .data(authService.candidateRegister(request))
+                .build();
+    }
+
+    @PostMapping("/register/recruiter")
+    public DataResponse<AccountResponse> recruiterRegister(@Valid @RequestBody RecruiterAccountRequest request) {
+        return DataResponse.<AccountResponse>builder()
+                .data(authService.recruiterRegister(request))
                 .build();
     }
 
