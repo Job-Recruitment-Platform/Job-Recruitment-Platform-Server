@@ -1,4 +1,4 @@
-package org.toanehihi.jobrecruitmentplatformserver.application.email;
+package org.toanehihi.jobrecruitmentplatformserver.application.email.service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

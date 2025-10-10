@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.toanehihi.jobrecruitmentplatformserver.application.email.EmailService;
+import org.toanehihi.jobrecruitmentplatformserver.application.email.service.EmailService;
 import org.toanehihi.jobrecruitmentplatformserver.application.token.service.TokenService;
 import org.toanehihi.jobrecruitmentplatformserver.domain.exception.AppException;
 import org.toanehihi.jobrecruitmentplatformserver.domain.exception.ErrorCode;

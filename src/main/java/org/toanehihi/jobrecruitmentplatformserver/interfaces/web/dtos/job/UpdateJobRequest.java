@@ -1,11 +1,6 @@
 package org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job;
 
 import lombok.Getter;
-import org.toanehihi.jobrecruitmentplatformserver.domain.model.JobDescription;
-import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.EmploymentType;
-import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.SeniorityLevel;
-import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.WorkMode;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 
