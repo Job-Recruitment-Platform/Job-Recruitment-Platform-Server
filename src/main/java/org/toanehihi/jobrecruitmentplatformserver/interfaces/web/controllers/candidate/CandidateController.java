@@ -30,11 +30,10 @@ public class CandidateController {
                 .build();
     }
 
-    @PutMapping("/profile/{accountId}")
-    DataResponse<CandidateResponse> updateCandidateProfile(@PathVariable Long accountId,
-            @RequestBody CandidateRequest request) {
+    @PutMapping("/profile")
+    DataResponse<CandidateResponse> updateCandidateProfile(@RequestBody CandidateRequest request) {
         return DataResponse.<CandidateResponse>builder()
-                .data(candidateService.updateCandidateProfile(accountId, request))
+                .data(candidateService.updateProfile(request))
                 .build();
     }
 

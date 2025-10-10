@@ -8,7 +8,7 @@ public interface CandidateService {
 
     CandidateResponse getProfile();
 
-    CandidateResponse updateCandidateProfile(Long accountId, CandidateRequest request);
+    CandidateResponse updateProfile(CandidateRequest request);
 
     SavedJobResponse saveJob(Long jobId);
 
