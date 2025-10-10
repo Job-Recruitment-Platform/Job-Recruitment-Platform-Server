@@ -3,12 +3,11 @@ package org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.company;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
-import org.toanehihi.jobrecruitmentplatformserver.domain.model.CompanyLocation;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Recruiter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.auto.value.AutoValue.Builder;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -23,5 +22,5 @@ public class CompanyResponse {
     private boolean verified;
     private OffsetDateTime dateCreated;
     private Recruiter recruiter;
-    private Set<CompanyLocation> companyLocations;
+    private Set<CompanyLocationResponse> companyLocations;
 }

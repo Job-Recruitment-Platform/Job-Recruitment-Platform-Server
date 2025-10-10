@@ -1,4 +1,4 @@
-package org.toanehihi.jobrecruitmentplatformserver.application.email;
+package org.toanehihi.jobrecruitmentplatformserver.application.email.service;
 
 public interface EmailService {
     void sendPasswordResetEmail(String recieveEmail, String token);

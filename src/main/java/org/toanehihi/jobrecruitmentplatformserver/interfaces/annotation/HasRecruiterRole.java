@@ -1,6 +1,5 @@
 package org.toanehihi.jobrecruitmentplatformserver.interfaces.annotation;
 
-import org.springframework.core.annotation.AliasFor;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.ElementType;

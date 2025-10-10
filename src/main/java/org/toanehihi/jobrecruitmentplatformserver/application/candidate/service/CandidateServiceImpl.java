@@ -47,14 +47,13 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public CandidateResponse getProfile() {
-        return candidateMapper.toResponse(getCandidate());
+        return candidateMapper.toResponse(getCurrentCandidate());
     }
 
     @Override
     @Transactional
-    public CandidateResponse updateCandidateProfile(Long accountId, CandidateRequest request) {
-        Candidate candidate = candidateRepository.findById(accountId)
-                .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_CANDIDATE_NOT_FOUND));
+    public CandidateResponse updateProfile(CandidateRequest request) {
+        Candidate candidate = getCurrentCandidate();
 
         // Update location
         if (candidate.getLocation() != null) {
@@ -99,7 +98,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public SavedJobResponse saveJob(Long jobId) {
-        Candidate candidate = getCandidate();
+        Candidate candidate = getCurrentCandidate();
         Job job = jobRepository.findById(jobId).orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_FOUND));
         SavedJob savedJob = SavedJob.builder()
                 .candidate(candidate)
@@ -112,12 +111,12 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Override
     public void removeSavedJob(Long jobId) {
-        Candidate candidate = getCandidate();
+        Candidate candidate = getCurrentCandidate();
         savedJobRepository.deleteByCandidateAndJobId(candidate, jobId);
     }
 
     // Private methods
-    private Candidate getCandidate() {
+    private Candidate getCurrentCandidate() {
         Account account = currentAccountProvider.getCurrentAccount();
         return candidateRepository.findById(account.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));

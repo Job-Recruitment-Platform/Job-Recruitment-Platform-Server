@@ -35,11 +35,12 @@ public enum ErrorCode {
     ACCOUNT_ALREADY_VERIFIED(1307, "Account already verify", HttpStatus.FORBIDDEN),
     ACCOUNT_RECRUITER_NOT_FOUND(1308, "Recruiter not found for this account", HttpStatus.CONFLICT),
 
+    // Recruiter(1401 - 1500)
+    RECRUITER_COMPANY_NOT_FOUND(1401, "There is no company found for recruiter account", HttpStatus.NOT_FOUND),
 
     // Role (1401 - 1500)
     ROLE_NOT_FOUND(1401, "Role not found", HttpStatus.NOT_FOUND),
     ACCESS_FORBIDDEN(1403, "Access forbidden", HttpStatus.FORBIDDEN),
-
 
     // Job (1501 - 1600)
     JOB_NOT_FOUND(1501, "Job not found", HttpStatus.NOT_FOUND),

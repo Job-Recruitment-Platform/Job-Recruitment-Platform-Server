@@ -8,19 +8,19 @@ import org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.job.Update
 
 public interface JobService {
     JobResponse findJobById(Long id);
+
     PageResult<JobResponse> getAllJobs(int page, int size, String sortBy, String sortDir);
 
     PageResult<JobResponse> getPublishJobs(int page, int size, String sortBy, String sortDir);
 
     JobResponse createJob(Account account, CreateJobRequest createJobRequest);
 
-    JobResponse updateJob(Account account,Long id, UpdateJobRequest request);
+    JobResponse updateJob(Account account, Long id, UpdateJobRequest request);
 
     JobResponse cancelJob(Long id);
 
     JobResponse moderateJobPosting(Long id, String action);
 
     void deleteJob(Long id);
-
 
 }
