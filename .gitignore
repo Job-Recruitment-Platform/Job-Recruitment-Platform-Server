@@ -35,3 +35,5 @@ build/
 **/.env
 node_modules/
 *.log
+
+**/application-dev.yml
