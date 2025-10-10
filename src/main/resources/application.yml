@@ -32,13 +32,13 @@ spring:
       client:
         registration:
           google:
-            client-id: ${CLIENT_ID:3503765693-1jivvacrfg59brqfdd7gm0imfv25r8ge.apps.googleusercontent.com}
-            client-secret: ${CLIENT_SECRET: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}
+            client-id: ${CLIENT_ID:}
+            client-secret: ${CLIENT_SECRET}
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME:hocongtoan987@gmail.com}
-    password: ${MAIL_PASSWORD:vaug kzao cxdl uxte}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -47,5 +47,7 @@ spring:
             enable: true
   jackson:
     time-zone: Asia/Ho_Chi_Minh
+  profiles:
+    default: dev
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
