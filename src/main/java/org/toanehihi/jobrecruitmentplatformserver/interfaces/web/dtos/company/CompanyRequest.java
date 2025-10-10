@@ -1,9 +1,7 @@
 package org.toanehihi.jobrecruitmentplatformserver.interfaces.web.dtos.company;
 
-import java.util.HashSet;
 import java.util.Set;
 
-import org.toanehihi.jobrecruitmentplatformserver.domain.model.CompanyLocation;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Recruiter;
 
 import lombok.Getter;
@@ -15,5 +13,5 @@ public class CompanyRequest {
     private String size;
     private Long logoResourceId;
     private Recruiter recruiter;
-    private Set<CompanyLocation> companyLocations = new HashSet<>();
+    private Set<CompanyLocationRequest> companyLocations;
 }
