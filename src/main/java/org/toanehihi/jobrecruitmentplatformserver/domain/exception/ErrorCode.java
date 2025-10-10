@@ -46,6 +46,8 @@ public enum ErrorCode {
     JOB_ROLE_NOT_FOUND(1502, "Job role not found", HttpStatus.NOT_FOUND),
     JOB_CLOSED_CANNOT_UPDATE(1503, "Job is closed, cannot update", HttpStatus.BAD_REQUEST),
     JOB_HAS_APPLICANTS_CANNOT_UPDATE(1504, "Job has applicants, cannot update", HttpStatus.BAD_REQUEST),
+    JOB_EXPIRED_CANNOT_APPLY(1505, "Job is expired, cannot apply", HttpStatus.BAD_REQUEST),
+    JOB_NOT_IN_PENDING_STATUS(1506, "Job is not in pending status", HttpStatus.BAD_REQUEST),
 
     // Skill (1701 - 1750)
     SKILL_NOT_FOUND(1701, "Skill not found", HttpStatus.NOT_FOUND),
@@ -65,6 +67,7 @@ public enum ErrorCode {
 
     // Data errors(9801 - 9900)
     ENUM_INVALID_VALUE(9801, "Invalid enum value", HttpStatus.BAD_REQUEST),
+    INVALID_REQUEST_DATA(9802, "Invalid request data", HttpStatus.BAD_REQUEST),
 
     // System errors (9901 - 9999)
     SYSTEM_UNKNOWN_ERROR(9998, "System unknow error", HttpStatus.INTERNAL_SERVER_ERROR),

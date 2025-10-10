@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Job;
+import org.toanehihi.jobrecruitmentplatformserver.domain.model.enums.JobStatus;
 
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
     @NonNull
     Page<Job> findAll(@NonNull Pageable pageable);
+
+    Page<Job> findJobsByStatus(@NonNull JobStatus jobStatus, Pageable pageable);
 }

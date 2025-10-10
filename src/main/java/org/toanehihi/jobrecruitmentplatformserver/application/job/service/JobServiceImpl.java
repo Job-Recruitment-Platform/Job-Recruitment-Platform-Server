@@ -62,6 +62,17 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public PageResult<JobResponse> getPublishJobs(int page, int size, String sortBy, String sortDir){
+        Sort.Direction direction = sortDir.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        Page<JobResponse> jobs = jobRepository.findJobsByStatus(JobStatus.PUBLISHED, pageable)
+                .map(jobMapper::toResponse);
+        return PageResult.from(jobs);
+    }
+
+
+    @Override
     @Transactional
     @HasRecruiterRole
     public JobResponse createJob(Account account, CreateJobRequest request) {
@@ -220,7 +231,28 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public void deleteJob(Long id) {
+    @HasRecruiterRole
+    public JobResponse moderateJobPosting(Long id, String action) {
+        action = action.toUpperCase();
 
+        if (!action.equals("APPROVE") && !action.equals("REJECT")) {
+            throw new AppException(ErrorCode.INVALID_REQUEST_DATA);
+        }
+        Job job = jobRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_FOUND));
+        if (job.getStatus() != JobStatus.PENDING) {
+            throw new AppException(ErrorCode.JOB_NOT_IN_PENDING_STATUS);
+        }
+        job.setStatus(action.equals("APPROVE") ? JobStatus.PUBLISHED : JobStatus.CANCELED);
+        return jobMapper.toResponse(jobRepository.save(job));
+    }
+
+
+    @Override
+    public void deleteJob(Long id) {
+        if (!jobRepository.existsById(id)) {
+            throw new AppException(ErrorCode.JOB_NOT_FOUND);
+        }
+        jobRepository.deleteById(id);
     }
 }
