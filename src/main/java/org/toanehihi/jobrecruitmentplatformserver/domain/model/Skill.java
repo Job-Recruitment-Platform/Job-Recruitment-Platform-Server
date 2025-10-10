@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,4 +33,8 @@ public class Skill {
 	@CreationTimestamp
 	@Column(name = "date_created", nullable = false)
 	private OffsetDateTime dateCreated;
+
+	@ManyToMany(mappedBy = "skills")
+	@Builder.Default
+	private Set<Job> jobs = new HashSet<>();
 }

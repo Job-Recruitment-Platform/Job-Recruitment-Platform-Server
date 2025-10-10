@@ -65,7 +65,7 @@ public class Job {
 	@Column(name = "currency")
 	private String currency;
 
-	@OneToOne(mappedBy = "job", fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "job")
 	private JobDescription description;
 
 	@Column(name = "date_posted")
@@ -78,9 +78,14 @@ public class Job {
 	@Column(name = "status", nullable = false)
 	private JobStatus status;
 
-	@OneToMany(mappedBy = "job")
+	@ManyToMany
+	@JoinTable(
+		name = "job_skill_requirements",
+		joinColumns = @JoinColumn(name = "job_id"),
+		inverseJoinColumns = @JoinColumn(name = "skill_id")
+	)
 	@Builder.Default
-	private Set<JobSkillRequirement> skillRequirements = new HashSet<>();
+	private Set<Skill> skills = new HashSet<>();
 }
 
 
