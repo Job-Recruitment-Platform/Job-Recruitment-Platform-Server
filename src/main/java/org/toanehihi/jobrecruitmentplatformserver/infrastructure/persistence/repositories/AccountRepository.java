@@ -3,7 +3,6 @@ package org.toanehihi.jobrecruitmentplatformserver.infrastructure.persistence.re
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.toanehihi.jobrecruitmentplatformserver.domain.model.Account;
-
 import java.util.Optional;
 
 @Repository

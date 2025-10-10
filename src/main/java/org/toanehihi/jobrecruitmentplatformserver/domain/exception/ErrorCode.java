@@ -53,8 +53,15 @@ public enum ErrorCode {
     // Location (1601 - 1700)
     LOCATION_NOT_FOUND(1601, "Location not found", HttpStatus.NOT_FOUND),
 
-    // Email (9701 - 9800)
-    EMAIL_SEND_FAILED(9701, "Failed to send email", HttpStatus.BAD_GATEWAY),
+    // Email (9601 - 9700)
+    EMAIL_SEND_FAILED(9601, "Failed to send email", HttpStatus.BAD_GATEWAY),
+
+    // Database constraint violations(9701 - 9800)
+    DATABASE_CONSTRAINT_VIOLATION(9701, "Database constraint violated", HttpStatus.BAD_REQUEST),
+    DATABASE_DUPLICATE_KEY(9702, "Duplicate key value violates unique constraint", HttpStatus.CONFLICT),
+    DATABASE_FOREIGN_KEY_VIOLATION(9703, "Foreign key constraint violated", HttpStatus.CONFLICT),
+    DATABASE_UNIQUE_CONSTRAINT_VIOLATION(9704, "Unique constraint violated", HttpStatus.CONFLICT),
+    DATABASE_NOT_NULL_VIOLATION(9705, "Null value violates not-null constraint", HttpStatus.BAD_REQUEST),
 
     // Data errors(9801 - 9900)
     ENUM_INVALID_VALUE(9801, "Invalid enum value", HttpStatus.BAD_REQUEST),
