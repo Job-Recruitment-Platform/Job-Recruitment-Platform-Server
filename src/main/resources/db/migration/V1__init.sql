@@ -55,7 +55,7 @@ CREATE TABLE
     accounts (
         id BIGSERIAL PRIMARY KEY,
         email VARCHAR(255) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL,
+        password VARCHAR(255),
         role_id BIGINT NOT NULL,
         status account_status NOT NULL DEFAULT 'ACTIVE',
         provider auth_provider NOT NULL,
